@@ -1,0 +1,6 @@
+---
+# tasks file for ca_base64
+
+- name: Get the ca cert as base64
+  set_fact:
+    cacert_base64: "{{ lookup('file', '{{ ca_cert_file }}') | b64encode }}"

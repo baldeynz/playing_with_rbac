@@ -1,0 +1,9 @@
+#This role grabs the kubectl binary and uses it to create a kubeconfig file
+ 
+- name: get kubectl based on kube_version and arch
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/v{{ kube_version }}/bin/{{ arch }}/amd64/kubectl
+    dest: ./kubectl
+    validate_certs: no
+    mode: 0744
+

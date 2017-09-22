@@ -1,0 +1,23 @@
+---
+# tasks file for kubeconfig
+
+- stat: path=./kubectl
+  register: kubectl_executable
+
+- include_role:
+    name: kubectl
+  when: kubectl_executable.stat.exists == False
+
+- include_role:
+    name: ca_base64
+
+- name: create basic kubeconfig
+  shell: ./kubectl --kubeconfig="{{ rbac_user }}-kubeconfig" config set {{ item }}
+  with_items:
+  - clusters.default.cluster.server "{{ api_server }}"
+  - clusters.default.cluster.certificate-authority-data "{{ cacert_base64 }}"
+  - users.default.client-certificate-data "{{ clientkey_base64 }}"
+  - users.default.client-key-data "{{ clientkey_base64 }}"
+  - contexts.default.context.cluster "default.cluster"
+  - contexts.default.context.user "default"
+  - current-context "default.cluster"

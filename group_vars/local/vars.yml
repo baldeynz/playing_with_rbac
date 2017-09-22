@@ -1,0 +1,18 @@
+namespace: yournamespace
+#location of ca key
+ca_key_file: ./ca-key.pem
+#location of ca cert
+ca_cert_file: ./ca.pem
+#how many days is the client certificate valid for
+days_valid: 30
+rbac_group: cluster-readonly
+rbac_user: dummy-user
+api_server: https://theurltoapiserver:443
+kube_version: 1.7.5
+arch: darwin
+api_groups: ""
+#below can be passed into playbook as an argument e.g -e '{resources
+resources: "'pods', 'hpa'"
+#below can be passed into playbook as an argument e.g -e '{"verbs": "'watch', 'get', 'list'"}'
+verbs: "'get', 'watch', 'list'"
+rbac_namespace: mynewnamespace

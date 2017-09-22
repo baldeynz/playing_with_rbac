@@ -1,0 +1,4 @@
+---
+# tasks file for namespace_role
+- name: Get role and bindings template
+  template: src=namespace_role_binding.j2.yml dest="./{{ rbac_namespace }}_{{ rbac_group }}_role_and_binding.yaml"

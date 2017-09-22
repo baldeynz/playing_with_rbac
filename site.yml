@@ -1,0 +1,10 @@
+- hosts: "{{ env }}"
+  gather_facts: false
+  pre_tasks:
+    #TODO
+  roles:
+    - { role: rbac_certs, tags: ['certs'] } 
+    - { role: kubectl, tags: ['kubectl'] } 
+    - { role: kubeconfig, tags: ['kubeconfig'] } 
+    - { role: cluster_role, tags: ['cluster_role'] } 
+    - { role: namespace_role, tags: ['namespace_role'] } 

@@ -1,0 +1,5 @@
+---
+# tasks file for cluster_role
+
+- name: Get role and bindings template
+  template: src=cluster_role_binding.j2.yml dest="./cluster_role_binding.yaml"

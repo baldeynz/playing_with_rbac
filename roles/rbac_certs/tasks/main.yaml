@@ -1,0 +1,42 @@
+
+- name: Get openssl config
+  template: src=openssl.cnf dest="./openssl.cnf"
+
+- name: create_client_certs
+  shell: openssl {{ item }}
+  with_items:
+  - genrsa -out {{ rbac_user }}-key.pem 2048 
+  - req -new -key {{ rbac_user }}-key.pem -out {{ rbac_user }}.csr -subj "/O={{ rbac_group }}/CN={{ rbac_user }}" -config ./openssl.cnf -sha256  
+  - x509 -req -in {{ rbac_user }}.csr -CA {{ ca_cert_file }} -CAkey {{ ca_key_file }} -CAcreateserial -out {{ rbac_user }}.pem -days {{ days_valid }} -extensions v3_req -extfile ./openssl.cnf -sha256 
+
+- name: Get the client key as base64
+  set_fact:
+    clientkey_base64: "{{ lookup('file', '{{ rbac_user }}-key.pem') | b64encode }}"
+
+- name: Get the client cert as base64
+  set_fact:
+    clientcert_base64: "{{ lookup('file', '{{ rbac_user }}.pem') | b64encode }}"
+
+- stat: path=./kubectl
+  register: kubectl_executable
+
+- include_role:
+    name: kubectl
+  when: kubectl_executable.stat.exists == False
+
+- include_role:
+    name: ca_base64
+
+- include_role:
+    name: kubeconfig
+
+- name: remove unwanted files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: 
+    - "./{{ rbac_user }}-key.pem"
+    - "./{{ rbac_user }}.pem"
+    - "./{{ rbac_user }}.csr"
+    - "./.srl"
+    - "./openssl.cnf"

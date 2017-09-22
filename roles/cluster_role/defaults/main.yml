@@ -1,0 +1,11 @@
+---
+# defaults file for cluster_role
+rbac_group: cluster-readonly
+api_server: https://theurltoapiserver:443
+kube_version: 1.7.5
+arch: darwin
+api_groups: ""
+#below can be passed into playbook as an argument e.g -e '{"resources": "'pods', 'hpa'"}
+resources: "'pods', 'hpa'"
+#below can be passed into playbook as an argument e.g -e '{"verbs": "'watch', 'get', 'list'"}'
+verbs: "'get', 'watch', 'list'"
